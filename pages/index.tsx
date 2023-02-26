@@ -1,27 +1,25 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DesmosCalculator from "../components/DesmosCalculator"
-import * as Desmos from 'desmos';
+import CodeTab from "../components/CodeTab"
+//import * as Desmos from 'desmos';
 
 function Home() {
   const [height, setHeight] = useState<string>("400px");
-  const [calculator, setCalculator] = useState<any>(null);
+  const [calculator, setCalculator] = useState<Desmos.Calculator>();
 
-  useEffect( ()=> {
-    const updateHeight = ()=> {
+  useEffect(() => {
+    const updateHeight = () => {
       setHeight(`${window.innerHeight}px`);
     }
     updateHeight();
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, [])
-  const callback = () => {
-    console.log("chuj");
-    calculator.setExpresion('y=x^(-1)')
-  }
   return (
-    <div>
-      <DesmosCalculator  width="60%" height={height}/>
+    <div style={{ display: "flex" }}>
+      <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width="60vw" height={height} />
+      <CodeTab tab_id="101" calculator={calculator!}/>
     </div>
   );
 }

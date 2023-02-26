@@ -9,15 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.1.4",
+    "@codemirror/language": "^6.6.0",
+    "@codemirror/legacy-modes": "^6.3.1",
     "@next/font": "13.1.6",
     "@types/node": "18.14.0",
+    "@uiw/codemirror-extensions-langs": "^4.19.9",
+    "@uiw/codemirror-theme-okaidia": "^4.19.9",
+    "@uiw/react-codemirror": "^4.19.9",
     "desmos": "^1.5.4",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "vm-browserify": "^1.1.2"
   },
   "devDependencies": {
     "@types/desmos": "^1.6.0",
