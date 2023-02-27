@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import DesmosCalculator from "../components/DesmosCalculator"
 import CodeTab from "../components/CodeTab"
+import TabsManager from "../components/TabsManager";
 //import * as Desmos from 'desmos';
 
 function Home() {
@@ -19,7 +20,8 @@ function Home() {
   return (
     <div style={{ display: "flex" }}>
       <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width="60vw" height={height} />
-      <CodeTab tab_id="101" calculator={calculator!}/>
+      {/* <CodeTab tab_id="101" calculator={calculator!}/> */}
+      <TabsManager calculator={calculator!}/>
     </div>
   );
 }

@@ -85,16 +85,12 @@ body {
   height: 100%;
   overflow-x: hidden;
   overflow-y: hidden;
+  font-size: larger;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #272822;
 }
 
 a {

@@ -21,7 +21,7 @@ function RunSandboxCode({ code, timeout, global_functions, run_from_id}: sandbox
     code +
 `}
 for (const val of main()) {
-    point(val[0].toString(), val[1].toString(), val[2].toString(), ${run_from_id} + "_" + val[0].toString() + "_" + val[1].toString(), secret=true)
+    point(val[0].toString(), val[1].toString(), val[2].toString(), "${run_from_id}" + "_" + val[0].toString() + "_" + val[1].toString(), secret=true)
 } 
         `;
     console.log(code_to_run);

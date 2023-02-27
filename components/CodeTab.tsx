@@ -1,9 +1,9 @@
-import { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, ButtonHTMLAttributes } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
-import {langNames, langs} from "@uiw/codemirror-extensions-langs";
+import { langNames, langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
-import exp from "constants";
+import styles from './CodeTab.module.css';
 
 interface CodeTabProps {
     calculator: Desmos.Calculator,
@@ -13,32 +13,33 @@ function deleteAllMentions(calc: Desmos.Calculator, id: string) {
     let to_delete = [];
     for (const expr of calc.getExpressions()) {
         if (expr.id?.includes(id)) {
-            to_delete.push({id: expr.id});
+            to_delete.push({ id: expr.id });
         }
     }
     calc.removeExpressions(to_delete);
 }
-function genAllowedFunctions(calc: Desmos.Calculator){
+
+function genAllowedFunctions(calc: Desmos.Calculator) {
     const allowed_functions = {
-        point: (x:string, y:string, color:string, id:string, secret = false) => {
-            calc.setExpression({latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret});
+        point: (x: string, y: string, color: string, id: string, secret = false) => {
+            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret });
         },
-        set_point_with_color: (x: string,y: string, color: string) =>{
-            calc.setExpression({latex: String.raw`\left( ${x}, ${y} \right)`, color: color})
+        set_point_with_color: (x: string, y: string, color: string) => {
+            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)`, color: color })
         },
         set_point: (x: string, y: string) => {
-            calc.setExpression({latex: String.raw`\left( ${x}, ${y} \right)`})
+            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)` })
         },
-        set_table: (xs: string[], ys:string[]) => {
+        set_table: (xs: string[], ys: string[]) => {
             calc.setExpression({
-                type:"table",
+                type: "table",
                 columns: [
                     {
-                        latex:"x",
+                        latex: "x",
                         values: xs
                     },
                     {
-                        latex:"y",
+                        latex: "y",
                         values: ys
                     }
                 ]
@@ -48,6 +49,7 @@ function genAllowedFunctions(calc: Desmos.Calculator){
     return allowed_functions;
 }
 function CodeTab({ calculator, tab_id, }: CodeTabProps) {
+    const editorRef = useRef<HTMLDivElement>(null);
     const [id, setId] = useState<string>(tab_id);
     const defaultCode = `const next_y = (x) => {
     return x * x;
@@ -83,15 +85,18 @@ for (i= start; i <= end; i++) {
 
     return (
         <div>
-            <button style={{background: "#272822", color: "#9effff"}} onClick={callback}> run </button>
-            <CodeMirror
-                value={defaultCode}
-                height="100vh"
-                width="40vw"
-                theme={okaidia}
-                extensions={[langs.javascript()]}
-                onChange={onChange}
-            />
+            <button className={styles.myBtn} onClick={callback}> run </button>
+            <button className={styles.myBtn} onClick={() => {deleteAllMentions(calculator, id)}}> clear </button>
+            <div ref={editorRef}>
+                <CodeMirror
+                    value={defaultCode}
+                    height="40vh"
+                    width="40vw"
+                    theme={okaidia}
+                    extensions={[langs.javascript()]}
+                    onChange={onChange}
+                />
+            </div>
         </div>
     )
 }
