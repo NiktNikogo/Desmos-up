@@ -50,7 +50,7 @@ function TabsManager({ calculator }: TabsManagerProps) {
         newButton.className = `${styles.rmvBtn}`;
         newButton.onclick = () => { handleRemove(id) };
         newButton.textContent = "remove";
-        
+
         const newDiv = document.createElement("div");
         newDiv.id = `tab_${counterRef.current}_div`;
         newDiv.className = `${styles.myContainer}`;
@@ -65,7 +65,15 @@ function TabsManager({ calculator }: TabsManagerProps) {
         ReactDOM.render(<CodeTab calculator={calculator} tab_id={id} />, newContent);
         tabContentList?.append(newContent);
         counterRef.current += 1;
-
+    }
+    const handleGraphRemoving = (id:string) =>{
+        let to_delete = [];
+        for (const expr of calculator.getExpressions()) {
+            if (expr.id?.includes(id)) {
+                to_delete.push({ id: expr.id });
+            }
+        }
+        calculator.removeExpressions(to_delete);
     }
     const handleRemove = (id: string) => {
         console.log(id);
@@ -80,21 +88,25 @@ function TabsManager({ calculator }: TabsManagerProps) {
         const tabContentChild = document.getElementById(id);
         if (tabContentChild)
             tabContentList?.removeChild(tabContentChild);
+            
+        handleGraphRemoving(id);
     }
     return (
-        <div className={styles.tab_container}>
-            <div className={styles.tab_list_container}>
-                <ul id="tab-list" className={styles.tab_list}>
-                    <button className={styles.myBtn} onClick={handleAddingTab}>New tab</button>
-                    <div id="tab_0_div" style={{ display: "flex", flexDirection: "column"}}>
-                        <li id="tab_0_check" className={styles.tab_item_active} onClick={() => handleTabClick('tab_0')} data-tab="tab_0">Tab 0 </li>
-                        <button id="tab_0_remove" className={styles.rmvBtn} onClick={() => handleRemove("tab_0")}>remove</button>
+        <div>
+            <div className={styles.tab_container}>
+                <div className={styles.tab_list_container}>
+                    <ul id="tab-list" className={styles.tab_list}>
+                        <button className={styles.myBtn} onClick={handleAddingTab}>New tab</button>
+                        <div id="tab_0_div" style={{ display: "flex", flexDirection: "column" }}>
+                            <li id="tab_0_check" className={styles.tab_item_active} onClick={() => handleTabClick('tab_0')} data-tab="tab_0">Tab 0 </li>
+                            <button id="tab_0_remove" className={styles.rmvBtn} onClick={() => handleRemove("tab_0")}>remove</button>
+                        </div>
+                    </ul>
+                </div>
+                <div id="tab-content-list" className={styles.tab_content_container}>
+                    <div id="tab_0" className={styles.tab_content_active}>
+                        <CodeTab calculator={calculator} tab_id="tab_0" />
                     </div>
-                </ul>
-            </div>
-            <div id="tab-content-list" className={styles.tab_content_container}>
-                <div id="tab_0" className={styles.tab_content_active}>
-                    <CodeTab calculator={calculator} tab_id="tab_0" />
                 </div>
             </div>
         </div>
