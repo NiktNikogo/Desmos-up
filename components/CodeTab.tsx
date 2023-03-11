@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, ButtonHTMLAttributes } from "react";
+import React, { useRef, useCallback, useState, ButtonHTMLAttributes, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { langNames, langs } from "@uiw/codemirror-extensions-langs";
@@ -49,9 +49,11 @@ function genAllowedFunctions(calc: Desmos.Calculator) {
     return allowed_functions;
 }
 function CodeTab({ calculator, tab_id, }: CodeTabProps) {
+    
     const editorRef = useRef<HTMLDivElement>(null);
     const [id, setId] = useState<string>(tab_id);
-    const defaultCode = `const next_y = (x) => {
+    const [startingCode, setStartingCode] = useState<string>(
+`const next_y = (x) => {
     return x * x;
 }
 let x = 1;
@@ -62,11 +64,24 @@ for (i= start; i <= end; i++) {
     x = i
     y = next_y(x);
     yield [x, y, "#DEAD00"];
-}`;
-    const editorCodeValueRef = useRef<string>(defaultCode);
+}`
+    );
+    const editorCodeValueRef = useRef<string>(startingCode);
+    
+    useEffect( () => {
+        const local = localStorage.getItem("tabs");
+        if (local) {
+            const localCode = JSON.parse(local)[tab_id];
+            if (localCode) {
+                setStartingCode(localCode);
+                editorCodeValueRef.current = local;
+            }
+        } else {
+
+        }
+    }, []);
     const callback = () => {
         deleteAllMentions(calculator, id);
-        console.log("Code run");
         const res = RunSandboxCode(
             {
                 code: editorCodeValueRef.current,
@@ -75,22 +90,24 @@ for (i= start; i <= end; i++) {
                 run_from_id: id,
             }
         );
-        if (res) {
-            console.log(res);
+        const tabs = localStorage.getItem("tabs");
+        if (tabs) {
+            let tabsObj = JSON.parse(tabs);
+            tabsObj[tab_id] = editorCodeValueRef.current; 
+            localStorage.setItem("tabs", JSON.stringify(tabsObj));
         }
     }
     const onChange = useCallback((value: any, viewUpdate: any) => {
         editorCodeValueRef.current = value;
     }, []);
-
     return (
         <div>
             <button className={styles.myBtn} onClick={callback}> run </button>
             <button className={styles.myBtn} onClick={() => {deleteAllMentions(calculator, id)}}> clear </button>
             <div ref={editorRef}>
                 <CodeMirror
-                    value={defaultCode}
-                    height="40vh"
+                    value={startingCode}
+                    height="100vh"
                     width="40vw"
                     theme={okaidia}
                     extensions={[langs.javascript()]}

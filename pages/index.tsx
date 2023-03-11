@@ -22,24 +22,44 @@ function Home() {
   return (
     <div style={{ display: "flex" }}>
       <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width={width} height={height} />
-      <div style={{position: "relative"}}>
-        <div style={{display: "inline"}}>
-          <TabsManager calculator={calculator!}/>
+      <div style={{ position: "relative" }} >
+        <div style={{ display: "inline" }}>
+          <TabsManager calculator={calculator!} />
         </div>
-        <button style={{
-           position: 'absolute', 
-           left: '-44px', 
-           top: '180px', 
-           zIndex: '999' 
-        }} onClick={ () => {
-          if(width == "60vw") {
-            setWidth("100vw");
-          } else {
-            setWidth("60vw");
-          }
-        }}>
-          <Image src={"/button.png"} alt="guzor" width={37} height={37}/>
-        </button>
+        <div style={{
+          position: 'absolute',
+          left: '-42px',
+          top: '180px',
+          zIndex: '999',
+          textAlign: "center",
+          background: "#121212",
+          width: "37px",
+          height: "37px",
+          borderRadius: "5px",
+          borderColor: "rgba(255,255,255,0.1)",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          boxShadow: "0 0 5px rgb(0 0 0 / 15%)"
+        }}
+          className="dcg-tooltip-hit-area-container"
+          onClick={() => {
+            const btn = document.getElementById("my-hide-button");
+            console.log(localStorage)
+            if (width == "60vw") {
+              setWidth("100vw");
+              if (btn) { btn.style.transform = "rotate(180deg)" };
+            } else {
+              setWidth("60vw");
+              if (btn) { btn.style.transform = "rotate(0deg)"; }
+            }
+          }}>
+          <div id="my-hide-button"  >
+            <label style={{ color: "#999" }}>
+              ☛
+            </label>
+          </div>
+        </div>
+
       </div>
     </div>
   );
