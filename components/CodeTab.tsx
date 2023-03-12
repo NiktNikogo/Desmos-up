@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState, ButtonHTMLAttributes, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
-import { langNames, langs } from "@uiw/codemirror-extensions-langs";
+import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
 import styles from './CodeTab.module.css';
 
@@ -31,9 +31,6 @@ function genAllowedFunctions(calc: Desmos.Calculator) {
             return {latex: expr, color: color, id: id, secret: secret};
         },
         __gatherExpressins: (exprs: [ExprObject]) => {
-            for(const expr in exprs) {
-                console.log(exprs[expr].latex)
-            }
             calc.setExpressions(exprs);
         }
     }

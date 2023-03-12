@@ -33,7 +33,7 @@ for (const __val of __main()) {
 }
 __gatherExpressins(__expressions);
         `;
-    console.log("code -> vm: ", code_to_run);
+    //console.log("code -> vm: ", code_to_run);
     
     const res =vm.runInNewContext(code_to_run, sandbox_allowed, options);
     return res;
