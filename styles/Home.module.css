@@ -1,0 +1,8 @@
+.rotate-clockwise {
+    transform: rotate(180deg);
+    background: red;
+}
+.rotate-anticlockwise {
+    transform: rotate(0deg);
+    background: blue;
+}

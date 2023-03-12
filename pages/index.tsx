@@ -4,13 +4,22 @@ import DesmosCalculator from "../components/DesmosCalculator"
 import CodeTab from "../components/CodeTab"
 import TabsManager from "../components/TabsManager";
 import Image from "next/image";
-
 //import * as Desmos from 'desmos';
 
 function Home() {
   const [height, setHeight] = useState<string>("400px");
   const [calculator, setCalculator] = useState<Desmos.Calculator>();
   const [width, setWidth] = useState<string>("60vw");
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const toggleBtn = () => {
+    const btn = document.getElementById("my-hide-button");
+    const calcDiv = document.getElementById("calc-div");
+    if (btn && calcDiv) {
+      setCollapsed(!collapsed);
+    }
+  }
+
   useEffect(() => {
     const updateHeight = () => {
       setHeight(`${window.innerHeight}px`);
@@ -19,10 +28,16 @@ function Home() {
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, [])
+  useEffect(() => {
+    setWidth(collapsed ? "60vw" : "100vw");
+  }, [collapsed])
+
   return (
     <div style={{ display: "flex" }}>
-      <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width={width} height={height} />
-      <div style={{ position: "relative" }} >
+      <div id="calc-div">
+        <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width={width} height={height} />
+      </div>
+      <div id="script-div" style={{ position: "relative" }} >
         <div style={{ display: "inline" }}>
           <TabsManager calculator={calculator!} />
         </div>
@@ -43,17 +58,9 @@ function Home() {
         }}
           className="dcg-tooltip-hit-area-container"
           onClick={() => {
-            const btn = document.getElementById("my-hide-button");
-            console.log(localStorage)
-            if (width == "60vw") {
-              setWidth("100vw");
-              if (btn) { btn.style.transform = "rotate(180deg)" };
-            } else {
-              setWidth("60vw");
-              if (btn) { btn.style.transform = "rotate(0deg)"; }
-            }
+            toggleBtn();
           }}>
-          <div id="my-hide-button"  >
+          <div id="my-hide-button" className={collapsed ? "rotate-clockwise" : "rotate-anticlockwise"}>
             <label style={{ color: "#999" }}>
               ☛
             </label>

@@ -9,6 +9,9 @@ interface CodeTabProps {
     calculator: Desmos.Calculator,
     tab_id: string,
 }
+interface ExprObject {
+    latex: string,
+}
 function deleteAllMentions(calc: Desmos.Calculator, id: string) {
     let to_delete = [];
     for (const expr of calc.getExpressions()) {
@@ -21,29 +24,17 @@ function deleteAllMentions(calc: Desmos.Calculator, id: string) {
 
 function genAllowedFunctions(calc: Desmos.Calculator) {
     const allowed_functions = {
-        point: (x: string, y: string, color: string, id: string, secret = false) => {
-            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret });
+        __point: (x: string, y: string, color: string, id: string, secret = false): Object => {
+            return { latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret };
         },
-        set_point_with_color: (x: string, y: string, color: string) => {
-            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)`, color: color })
+        __expression: (expr: string, color: string, id: string, secret = false): Object => {
+            return {latex: expr, color: color, id: id, secret: secret};
         },
-        set_point: (x: string, y: string) => {
-            calc.setExpression({ latex: String.raw`\left( ${x}, ${y} \right)` })
-        },
-        set_table: (xs: string[], ys: string[]) => {
-            calc.setExpression({
-                type: "table",
-                columns: [
-                    {
-                        latex: "x",
-                        values: xs
-                    },
-                    {
-                        latex: "y",
-                        values: ys
-                    }
-                ]
-            });
+        __gatherExpressins: (exprs: [ExprObject]) => {
+            for(const expr in exprs) {
+                console.log(exprs[expr].latex)
+            }
+            calc.setExpressions(exprs);
         }
     }
     return allowed_functions;
@@ -74,7 +65,7 @@ for (i= start; i <= end; i++) {
             const localCode = JSON.parse(local)[tab_id];
             if (localCode) {
                 setStartingCode(localCode);
-                editorCodeValueRef.current = local;
+                editorCodeValueRef.current = localCode;
             }
         } else {
 

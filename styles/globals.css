@@ -103,3 +103,29 @@ a {
     color-scheme: dark;
   }
 }
+.rotate-clockwise {
+  animation: rotate-clockwise 0.24s linear forwards;
+}
+.rotate-anticlockwise {
+  animation: rotate-anticlockwise 0.24s linear forwards; 
+}
+@keyframes rotate-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(180deg); }
+}
+@keyframes rotate-anticlockwise {
+  from { transform: rotate(180deg); }
+  to { transform: rotate(0deg); }
+}
+#my-hide-button label {
+  color: #999;
+  font-size: 1.5rem;
+  line-height: 2.2rem;
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.24s ease;
+}
+
+.collapsed #my-hide-button label {
+  transform: rotate(180deg);
+}

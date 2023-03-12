@@ -34,7 +34,6 @@ function TabsManager({ calculator }: TabsManagerProps) {
     useEffect(() => {
         handleLocalTabs();
     }, []);
-
     const handleAddingTab = (new_idx = -1) => {
         if (new_idx != -1) {
             counterRef.current = new_idx;
@@ -66,7 +65,12 @@ function TabsManager({ calculator }: TabsManagerProps) {
         const tabContentChild = document.getElementById(id);
         if (tabContentChild)
             tabContentList?.removeChild(tabContentChild);
-        localStorage.removeItem(id);
+        const local = localStorage.getItem("tabs");
+        if (local) {
+            let localObj = JSON.parse(local);
+            delete localObj[id];
+            localStorage.setItem("tabs", JSON.stringify(localObj));
+        }
         handleGraphRemoving(id);
     }
     return (
@@ -80,7 +84,9 @@ function TabsManager({ calculator }: TabsManagerProps) {
                                 <div key={tab_id} id={`${tab_id}_div`} style={{ display: "flex", flexDirection: "column" }}>
                                     <li id={`${tab_id}_check`} className={tab_id === activeTab ? styles.tab_item_active : styles.tab_item}
                                         onClick={() => { setActiveTab(tab_id) }} data-tab={tab_id}>{tab_id} </li>
-                                    <button id={`${tab_id}_remove`} className={styles.rmvBtn} onClick={() => handleRemove(tab_id)}>remove</button>
+                                    <div style={{ display: "flex", flexDirection: "row", paddingRight: "5px" }} >
+                                        <div id={`${tab_id}_remove`} style={{width: "100%"}} className={styles.desmosBtn} onClick={() => handleRemove(tab_id)}> remove </div>
+                                    </div>
                                 </div>
                             );
                         })

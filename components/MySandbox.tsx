@@ -17,14 +17,23 @@ function RunSandboxCode({ code, timeout, global_functions, run_from_id}: sandbox
         timeout: timeout
     };
     const code_to_run = 
-`const main = function *() {` +    
+`const __main = function *() {` +    
     code +
 `}
-for (const val of main()) {
-    point(val[0].toString(), val[1].toString(), val[2].toString(), "${run_from_id}" + "_" + val[0].toString() + "_" + val[1].toString(), secret=true)
-} 
+__expressions = [];
+for (const __val of __main()) {
+    if(__val.length === 3) { 
+        const __expr = __point(__val[0].toString(), __val[1].toString(), __val[2].toString(), "${run_from_id}" + "_" + __val[0].toString() + "_" + __val[1].toString(), secret=true)
+        __expressions.push(__expr);
+    }
+    else if(__val.length === 2) {
+        const __expr = __expression(__val[0].toString(), __val[1].toString(), "${run_from_id}" + "_" + __val[0].toString(), secret=false)
+        __expressions.push(__expr);
+    }
+}
+__gatherExpressins(__expressions);
         `;
-    console.log(code_to_run);
+    console.log("code -> vm: ", code_to_run);
     
     const res =vm.runInNewContext(code_to_run, sandbox_allowed, options);
     return res;
