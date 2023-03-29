@@ -5,43 +5,57 @@ import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
 import styles from './CodeTab.module.css';
 
+const maxAtOnce = 50;
+const minimalRenderDelta = 200;
+
 interface CodeTabProps {
     calculator: Desmos.Calculator,
     tab_id: string,
 }
 interface ExprObject {
     latex: string,
+    color: string,
+    id: string,
+    secret: boolean,
+    hidden: boolean,
 }
-function deleteAllMentions(calc: Desmos.Calculator, id: string) {
-    let to_delete = [];
-    for (const expr of calc.getExpressions()) {
-        if (expr.id?.includes(id)) {
-            to_delete.push({ id: expr.id });
-        }
+function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
+    let allExprs = toDelete.length;
+    console.log(`@delete: ${toDelete.length}`);
+    for(let i = 0; i < allExprs; i++) {
+        let new_expr = toDelete[i]
+        new_expr.hidden = true;
+        calc.setExpression(new_expr); // this is somehow faster?
+        //calc.removeExpression(new_expr);
     }
-    calc.removeExpressions(to_delete);
+    toDelete = [];
 }
 
-function genAllowedFunctions(calc: Desmos.Calculator) {
+function genAllowedFunctions(savedExpressions: ExprObject[], calc: Desmos.Calculator) {
     const allowed_functions = {
-        __point: (x: string, y: string, color: string, id: string, secret = false): Object => {
-            return { latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret };
+        __point: (x: string, y: string, color: string, id: string, secret = false, hidden = false): Object => {
+            return { latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret, hidden: hidden };
         },
-        __expression: (expr: string, color: string, id: string, secret = false): Object => {
-            return {latex: expr, color: color, id: id, secret: secret};
+        __expression: (expr: string, color: string, id: string, secret = false, hidden = false): Object => {
+            return { latex: expr, color: color, id: id, secret: secret, hidden: hidden };
         },
-        __gatherExpressins: (exprs: [ExprObject]) => {
-            calc.setExpressions(exprs);
+        __gatherExpressions: (exprs: ExprObject[]) => {
+            let allExprs = exprs.length;
+            for(let i = 0; i < allExprs; i ++ ) {
+                savedExpressions.push(exprs[i]);
+                calc.setExpression(exprs[i]);
+            }
+            
         }
     }
     return allowed_functions;
 }
 function CodeTab({ calculator, tab_id, }: CodeTabProps) {
-    
+
     const editorRef = useRef<HTMLDivElement>(null);
     const [id, setId] = useState<string>(tab_id);
     const [startingCode, setStartingCode] = useState<string>(
-`const next_y = (x) => {
+        `const next_y = (x) => {
     return x * x;
 }
 let x = 1;
@@ -55,8 +69,8 @@ for (i= start; i <= end; i++) {
 }`
     );
     const editorCodeValueRef = useRef<string>(startingCode);
-    
-    useEffect( () => {
+    const ids: Array<ExprObject> = [];
+    useEffect(() => {
         const local = localStorage.getItem("tabs");
         if (local) {
             const localCode = JSON.parse(local)[tab_id];
@@ -69,19 +83,19 @@ for (i= start; i <= end; i++) {
         }
     }, []);
     const callback = () => {
-        deleteAllMentions(calculator, id);
+        deleteAllMentions(calculator, ids);
         const res = RunSandboxCode(
             {
                 code: editorCodeValueRef.current,
                 timeout: 1000,
-                global_functions: genAllowedFunctions(calculator),
+                global_functions: genAllowedFunctions(ids, calculator),
                 run_from_id: id,
             }
         );
         const tabs = localStorage.getItem("tabs");
         if (tabs) {
             let tabsObj = JSON.parse(tabs);
-            tabsObj[tab_id] = editorCodeValueRef.current; 
+            tabsObj[tab_id] = editorCodeValueRef.current;
             localStorage.setItem("tabs", JSON.stringify(tabsObj));
         }
     }
@@ -91,11 +105,11 @@ for (i= start; i <= end; i++) {
     return (
         <div>
             <button className={styles.myBtn} onClick={callback}> run </button>
-            <button className={styles.myBtn} onClick={() => {deleteAllMentions(calculator, id)}}> clear </button>
+            <button className={styles.myBtn} onClick={() => { deleteAllMentions(calculator, ids) }}> clear </button>
             <div ref={editorRef}>
                 <CodeMirror
                     value={startingCode}
-                    height="100vh"
+                    height="80vh"
                     width="40vw"
                     theme={okaidia}
                     extensions={[langs.javascript()]}

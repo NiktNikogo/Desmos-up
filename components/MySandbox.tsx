@@ -23,15 +23,16 @@ function RunSandboxCode({ code, timeout, global_functions, run_from_id}: sandbox
 __expressions = [];
 for (const __val of __main()) {
     if(__val.length === 3) { 
-        const __expr = __point(__val[0].toString(), __val[1].toString(), __val[2].toString(), "${run_from_id}" + "_" + __val[0].toString() + "_" + __val[1].toString(), secret=true)
+        const __expr = __point(__val[0].toString(), __val[1].toString(), __val[2].toString(), "${run_from_id}" + "_" + __val[0].toString() + "_" + __val[1].toString(), secret=true, hidden=false)
+        console_log("added");
         __expressions.push(__expr);
     }
     else if(__val.length === 2) {
-        const __expr = __expression(__val[0].toString(), __val[1].toString(), "${run_from_id}" + "_" + __val[0].toString(), secret=false)
+        const __expr = __expression(__val[0].toString(), __val[1].toString(), "${run_from_id}" + "_" + __val[0].toString(), secret=false, hidden=false)
         __expressions.push(__expr);
     }
 }
-__gatherExpressins(__expressions);
+__gatherExpressions(__expressions);
         `;
     //console.log("code -> vm: ", code_to_run);
     

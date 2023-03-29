@@ -12,7 +12,6 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <script
-            async
             defer
             src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
             id="desmos-calculator"

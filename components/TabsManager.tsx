@@ -8,7 +8,7 @@ interface TabsManagerProps {
 }
 function TabsManager({ calculator }: TabsManagerProps) {
     const [activeTab, setActiveTab] = useState<string>("tab_1");
-    const [usedTabs, setUsedTabs] = useState<[string]>(["tab_1"]);
+    const [usedTabs, setUsedTabs] = useState<string[]>(["tab_1"]);
     const counterRef = useRef<number>(1);
     const checkRef = useRef<boolean>(false);
     const handleLocalTabs = () => {
