@@ -7,7 +7,7 @@ The code editor is powered by codemirror.
 If the graphing calculator don't show up, just reload the page.
 
 <https://www.desmos.com>  
-<https://codemirror.net/>
+<https://codemirror.net/>  
 <https://desmos-up.vercel.app/>
 ## TODO
 
