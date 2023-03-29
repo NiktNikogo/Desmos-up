@@ -21,7 +21,6 @@ interface ExprObject {
 }
 function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
     let allExprs = toDelete.length;
-    console.log(`@delete: ${toDelete.length}`);
     for(let i = 0; i < allExprs; i++) {
         let new_expr = toDelete[i]
         new_expr.hidden = true;

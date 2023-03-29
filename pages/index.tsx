@@ -4,7 +4,6 @@ import DesmosCalculator from "../components/DesmosCalculator"
 import CodeTab from "../components/CodeTab"
 import TabsManager from "../components/TabsManager";
 import Image from "next/image";
-//import * as Desmos from 'desmos';
 
 function Home() {
   const [height, setHeight] = useState<string>("400px");
