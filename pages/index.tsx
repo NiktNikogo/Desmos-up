@@ -1,9 +1,7 @@
-
-import { useEffect, useRef, useState } from "react";
+/// <reference types="@types/desmos" />
+import { useEffect, useState } from "react";
 import DesmosCalculator from "../components/DesmosCalculator"
-import CodeTab from "../components/CodeTab"
 import TabsManager from "../components/TabsManager";
-import Image from "next/image";
 
 function Home() {
   const [height, setHeight] = useState<string>("400px");

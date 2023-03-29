@@ -1,7 +1,6 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CodeTab from "../components/CodeTab"
 import styles from './TabsManager.module.css';
-import ReactDOM from "react-dom";
 
 interface TabsManagerProps {
     calculator: Desmos.Calculator;

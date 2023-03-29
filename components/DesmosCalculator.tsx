@@ -1,6 +1,5 @@
 
-import { MutableRefObject, useEffect, useRef, useState } from 'react';
-//import * as Desmos from 'desmos';
+import {useEffect, useRef, useState } from 'react';
 
 interface CalcProps {
     width: string,

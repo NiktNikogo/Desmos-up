@@ -1,1 +1,1 @@
-declare module 'desmos';
+declare module 'Desmos';
