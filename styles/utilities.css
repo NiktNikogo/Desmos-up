@@ -1,4 +1,87 @@
-.btn {
-    background: "#272822";
-    color: "#9effff";
+.tab_list {
+    list-style: none;
+    display: flex;
+    margin-bottom: 0;
+    padding-left: 0;
+    overflow: auto;
+}
+
+.tab_item {
+    margin-right: 4px;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid darkslategray;
+    border-bottom: none;
+}
+
+.tab_item_active {
+    margin-right: 4px;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid darkslategray;
+    border-bottom: none;
+}
+
+.dark-mode .tab_item_active {
+    background-color: dimgray;
+}
+.light-mode .tab_item_active {
+    background-color: lightcoral;
+}
+
+.tab_content {
+    display: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 4px 4px 4px;
+}
+
+.tab_content_active {
+    display: block;
+
+}
+
+.tab_container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;  
+}
+
+.tab_list_container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.tab_content_container {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.change-button {
+    color: white;
+    font-size: medium;
+    padding: 5px;
+    transition: border-radius 0.3s ease-in-out;
+}
+
+.change-button:hover {
+    border-radius: 10px;
+    cursor: pointer;
+}
+.dark-mode .change-button {
+    background: #272822;
+    border: 2px solid #555652;
+}
+.light-mode .change-button {
+    background: lightgray;
+    border: 2px solid lightslategray;
 }

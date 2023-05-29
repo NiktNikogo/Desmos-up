@@ -13,7 +13,7 @@ class MyDocument extends Document {
         <Head>
           <script
             defer
-            src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+            src="calculator.js"
             id="desmos-calculator"
           ></script>
         </Head>

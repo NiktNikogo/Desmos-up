@@ -1,7 +1,6 @@
 .tab_list {
     list-style: none;
     display: flex;
-    border-bottom: 1px solid #ccc;
     margin-bottom: 0;
     padding-left: 0;
     overflow: auto;
@@ -11,7 +10,6 @@
     margin-right: 4px;
     padding: 5px;
     cursor: pointer;
-    border: 1px solid lightslategray;
     border-bottom: none;
     border-radius: 4px 4px 0 0;
 }
@@ -62,12 +60,14 @@
 }
 
 .myBtn {
-    background: #272822;
-    color: white;
-    font-size: medium;
-    border: 2px solid #555652;
-    padding: 5px;
-    transition: border-radius 0.3s ease-in-out;
+    background: #ededed;
+    cursor: pointer;
+    box-shadow: 0 0 5px #00000026;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 5px;
+    cursor: pointer;
+    text-shadow: 0 1px #fff;
+    box-sizing: border-box;
 }
 
 .myBtn:hover {

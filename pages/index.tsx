@@ -3,18 +3,19 @@ import { useEffect, useState } from "react";
 import DesmosCalculator from "../components/DesmosCalculator"
 import TabsManager from "../components/TabsManager";
 
+
 function Home() {
   const [height, setHeight] = useState<string>("400px");
   const [calculator, setCalculator] = useState<Desmos.Calculator>();
   const [width, setWidth] = useState<string>("60vw");
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [lightMode, setLightMode] = useState<boolean>(false);
 
-  const toggleBtn = () => {
-    const btn = document.getElementById("my-hide-button");
-    const calcDiv = document.getElementById("calc-div");
-    if (btn && calcDiv) {
-      setCollapsed(!collapsed);
-    }
+  const toggleHide = () => {
+    setCollapsed(!collapsed);
+  }
+  const toggleMode = () => {
+    setLightMode(!lightMode);
   }
 
   useEffect(() => {
@@ -34,37 +35,36 @@ function Home() {
       <div id="calc-div">
         <DesmosCalculator onCalculatorLoad={(calculator) => setCalculator(calculator)} width={width} height={height} />
       </div>
-      <div id="script-div" style={{ position: "relative" }} >
-        <div style={{ display: "inline" }}>
-          <TabsManager calculator={calculator!} />
-        </div>
-        <div style={{
-          position: 'absolute',
-          left: '-42px',
-          top: '180px',
-          zIndex: '999',
-          textAlign: "center",
-          background: "#121212",
-          width: "37px",
-          height: "37px",
-          borderRadius: "5px",
-          borderColor: "rgba(255,255,255,0.1)",
-          borderWidth: "1px",
-          borderStyle: "solid",
-          boxShadow: "0 0 5px rgb(0 0 0 / 15%)"
-        }}
-          className="dcg-tooltip-hit-area-container"
-          onClick={() => {
-            toggleBtn();
-          }}>
-          <div id="my-hide-button" className={collapsed ? "rotate-clockwise" : "rotate-anticlockwise"}>
-            <label style={{ color: "#999" }}>
-              ☛
+      <div className={lightMode ? "light-mode" : "dark-mode"}>
+        <div id="script-div" style={{ position: "relative" }} >
+          <div style={{ display: "inline" }}>
+            <TabsManager calculator={calculator!} lightMode={lightMode} />
+          </div>
+          <div className="util-button"
+            style={{ left: "-42px", top: "230px", width: "37px", height: "37px", position: "absolute"}}
+            onClick={() => {
+              toggleHide();
+            }}>
+            <div id="my-hide-button" className={collapsed ? "rotate-clockwise" : "rotate-anticlockwise"}>
+              <label style={{ cursor: "pointer" }}>
+                ☛
             </label>
+            </div>
+          </div>
+          <div className="util-button"
+            style={{ left: "-42px", top: "273px", width: "37px", height: "37px", position: "absolute" }}
+            onClick={() => {
+              toggleMode()
+            }}>
+            <div id="change-light-mode" className={lightMode ? "lightMode" : "darkMode"}>
+              <label style={{ cursor: "pointer" }}>
+                💡
+            </label>
+            </div>
           </div>
         </div>
-
       </div>
+
     </div>
   );
 }

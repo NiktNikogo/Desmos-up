@@ -15,6 +15,7 @@
     "@next/font": "13.1.6",
     "@types/node": "18.14.0",
     "@uiw/codemirror-extensions-langs": "^4.19.9",
+    "@uiw/codemirror-theme-bbedit": "^4.20.2",
     "@uiw/codemirror-theme-okaidia": "^4.19.9",
     "@uiw/react-codemirror": "^4.19.9",
     "desmos": "^1.5.4",

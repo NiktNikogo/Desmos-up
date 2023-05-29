@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import CodeTab from "../components/CodeTab"
-import styles from './TabsManager.module.css';
+/**
+ * TODO:
+ * naprawić gówno, że jak zmieniam nazwę i usuwam, to nie czyści starego wykresu
+ * coś zrobić z tym scrollem
+ * dodać nowe typy
+ */
 
 interface TabsManagerProps {
-    calculator: Desmos.Calculator;
+    calculator: Desmos.Calculator,
+    lightMode: boolean;
 }
-function TabsManager({ calculator }: TabsManagerProps) {
+function TabsManager({ calculator, lightMode }: TabsManagerProps) {
     const [activeTab, setActiveTab] = useState<string>("tab_1");
     const [usedTabs, setUsedTabs] = useState<Set<string>>(new Set(["tab_1"]));
     const counterRef = useRef<number>(1);
@@ -100,27 +106,27 @@ function TabsManager({ calculator }: TabsManagerProps) {
     }
     return (
         <div>
-            <div className={styles.tab_container}>
-                <div className={styles.tab_list_container}>
-                    <ul id="tab-list" className={styles.tab_list}>
-                        <button className={styles.myBtn} onClick={() => { handleAddingTab() }}>New tab</button>
+            <div className="tab_container">
+                <div className="tab_list_container">
+                    <ul id="tab-list" className="tab_list">
+                        <button className="util-button" style ={{boxSizing: "border-box", borderBottom: "none"}} onClick={() => { handleAddingTab() }}>New tab</button>
                         {
                             Array.from(usedTabs).map((tab_id) => {
                                 return (
                                     <div key={tab_id} id={`${tab_id}_div`} style={{ display: "flex", flexDirection: "column" }}>
-                                        <div className={tab_id === activeTab ? styles.tab_item_active : styles.tab_item}>
+                                        <div className={tab_id === activeTab ? "tab_item_active" : "tab_item"}>
                                             <div style={{ display: "flex", flexDirection: "row", width: "100%" }} >
                                                 <li id={`${tab_id}_check`}
                                                     onClick={() => { setActiveTab(tab_id) }} data-tab={tab_id}>{tab_id}
                                                 </li>
-                                                <button className={styles.desmosBtn} onClick={() => {
+                                                <button className="util-button" onClick={() => {
                                                     const newName = prompt(`Rename ${tab_id} to: `);
                                                     if (newName) {
                                                         handleRenameTab(tab_id, newName);
                                                     }
                                                 }}> 🖊️ </button>
                                             </div>
-                                            <div id={`${tab_id}_remove`} style={{ width: "100", marginTop: "4px" }} className={styles.desmosBtn} onClick={() => handleRemove(tab_id)}> remove </div>
+                                            <div id={`${tab_id}_remove`} style={{ width: "100", marginTop: "4px" }} className="util-button" onClick={() => handleRemove(tab_id)}> remove </div>
                                         </div>
                                     </div>
                                 );
@@ -128,12 +134,12 @@ function TabsManager({ calculator }: TabsManagerProps) {
                         }
                     </ul>
                 </div>
-                <div id="tab-content-list" className={styles.tab_content_container}>
+                <div id="tab-content-list" className="tab_content_container">
                     {
                         Array.from(usedTabs).map((tab_id) => {
                             return (
-                                <div key={tab_id} className={tab_id === activeTab ? styles.tab_content_active : styles.tab_content} id={tab_id}>
-                                    <CodeTab calculator={calculator} tab_id={tab_id} />
+                                <div key={tab_id} className={tab_id === activeTab ? "tab_content_active" : "tab_content"} id={tab_id}>
+                                    <CodeTab lightMode={lightMode} calculator={calculator} tab_id={tab_id} />
                                 </div>);
                         })
                     }

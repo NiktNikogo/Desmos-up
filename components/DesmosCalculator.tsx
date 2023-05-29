@@ -15,7 +15,7 @@ function DesmosCalculator({width, height, onCalculatorLoad}: CalcProps) {
       
       let calculator = (window as typeof window & { Desmos: typeof Desmos }).Desmos.GraphingCalculator(
         calculatorRef.current!,
-        { folders: true, invertedColors: true, notes: true }
+        { folders: true, invertedColors: false, notes: true }
       );
       if (calculator) {
         setDesmos(calculator);

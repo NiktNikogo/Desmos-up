@@ -1,27 +1,20 @@
 import React, { useRef, useCallback, useState, useEffect } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { okaidia } from "@uiw/codemirror-theme-okaidia";
+import { bbedit } from "@uiw/codemirror-theme-bbedit"
 import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
 import styles from './CodeTab.module.css';
-
-const maxAtOnce = 50;
-const minimalRenderDelta = 200;
+import { ExprObject } from '../lib/desmosUtils'
 
 interface CodeTabProps {
     calculator: Desmos.Calculator,
     tab_id: string,
-}
-interface ExprObject {
-    latex: string,
-    color: string,
-    id: string,
-    secret: boolean,
-    hidden: boolean,
+    lightMode: boolean,
 }
 function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
     let allExprs = toDelete.length;
-    for(let i = 0; i < allExprs; i++) {
+    for (let i = 0; i < allExprs; i++) {
         let new_expr = toDelete[i]
         new_expr.hidden = true;
         calc.setExpression(new_expr); // this is somehow faster?
@@ -29,7 +22,6 @@ function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
     }
     toDelete = [];
 }
-
 function genAllowedFunctions(savedExpressions: ExprObject[], calc: Desmos.Calculator) {
     const allowed_functions = {
         __point: (x: string, y: string, color: string, id: string, secret = false, hidden = false): Object => {
@@ -40,16 +32,16 @@ function genAllowedFunctions(savedExpressions: ExprObject[], calc: Desmos.Calcul
         },
         __gatherExpressions: (exprs: ExprObject[]) => {
             let allExprs = exprs.length;
-            for(let i = 0; i < allExprs; i ++ ) {
+            for (let i = 0; i < allExprs; i++) {
                 savedExpressions.push(exprs[i]);
                 calc.setExpression(exprs[i]);
             }
-            
+
         }
     }
     return allowed_functions;
 }
-function CodeTab({ calculator, tab_id, }: CodeTabProps) {
+function CodeTab({ calculator, tab_id, lightMode }: CodeTabProps) {
 
     const editorRef = useRef<HTMLDivElement>(null);
     const [id, setId] = useState<string>(tab_id);
@@ -103,14 +95,14 @@ for (i= start; i <= end; i++) {
     }, []);
     return (
         <div>
-            <button className={styles.myBtn} onClick={callback}> run </button>
-            <button className={styles.myBtn} onClick={() => { deleteAllMentions(calculator, ids) }}> clear </button>
+            <button className="change-button" onClick={callback}> run </button>
+            <button className="change-button" onClick={() => { deleteAllMentions(calculator, ids) }}> clear </button>
             <div ref={editorRef}>
                 <CodeMirror
                     value={startingCode}
                     height="80vh"
                     width="40vw"
-                    theme={okaidia}
+                    theme={lightMode ? bbedit : okaidia}
                     extensions={[langs.javascript()]}
                     onChange={onChange}
                 />
