@@ -1,4 +1,3 @@
-/// <reference types="@types/desmos" />
 import Console from "@/components/Console";
 import { useEffect, useState } from "react";
 import DesmosCalculator from "../components/DesmosCalculator"
@@ -7,7 +6,7 @@ import Toggle from "../components/Toggle"
 
 function Home() {
   const [height, setHeight] = useState<string>("400px");
-  const [calculator, setCalculator] = useState<Desmos.Calculator>();
+  const [calculator, setCalculator] = useState<any>();
   const [width, setWidth] = useState<string>("60vw");
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [lightMode, setLightMode] = useState<boolean>(true);
