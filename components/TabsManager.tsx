@@ -41,7 +41,7 @@ function TabsManager({ calculator, lightMode, codeHeight }: TabsManagerProps) {
         handleLocalTabs();
     }, []);
     const handleAddingTab = (new_idx: string | number = -1) => {
-        
+
         let id = "";
         if (typeof (new_idx) == "number") {
             if (new_idx != -1) {
@@ -107,9 +107,11 @@ function TabsManager({ calculator, lightMode, codeHeight }: TabsManagerProps) {
     return (
         <div>
             <div className="tab_container">
-                <div className="tab_list_container">
+                <div className="tab_list_container" >
                     <ul id="tab-list" className="tab_list">
-                        <button className="util-button" style ={{boxSizing: "border-box", borderBottom: "none"}} onClick={() => { handleAddingTab() }}>New tab</button>
+                        <button className="util-button" style={{ boxSizing: "border-box", borderBottom: "none", width: "70px", minWidth: "70px" }}
+                            onClick={() => { handleAddingTab() }}>New tab</button>
+
                         {
                             Array.from(usedTabs).map((tab_id) => {
                                 return (
@@ -139,7 +141,7 @@ function TabsManager({ calculator, lightMode, codeHeight }: TabsManagerProps) {
                         Array.from(usedTabs).map((tab_id) => {
                             return (
                                 <div key={tab_id} className={tab_id === activeTab ? "tab_content_active" : "tab_content"} id={tab_id}>
-                                
+
                                     <CodeTab lightMode={lightMode} calculator={calculator} tab_id={tab_id} height={codeHeight} />
                                 </div>);
                         })

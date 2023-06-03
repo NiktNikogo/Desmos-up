@@ -3,7 +3,6 @@
     display: flex;
     margin-bottom: 0;
     padding-left: 0;
-    overflow: auto;
 }
 
 .tab_item {
@@ -52,12 +51,12 @@
 }
 
 .tab_list_container {
-    overflow-x: auto;
     overflow-y: hidden;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     padding-bottom: 10px;
+    width: 39vw;
 }
 
 .tab_content_container {
