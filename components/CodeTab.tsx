@@ -4,40 +4,37 @@ import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { bbedit } from "@uiw/codemirror-theme-bbedit"
 import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
-import { ExprObject } from '../lib/desmosUtils'
+import { addFolderWithMembers } from '../lib/desmosUtils'
 import { clearConsole, writeFailure } from "@/lib/consoleUtils";
 
 interface CodeTabProps {
-    calculator: Desmos.Calculator,
+    calculator: any,
     tab_id: string,
     lightMode: boolean,
     height: string
 }
-function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
-    let allExprs = toDelete.length;
-    for (let i = 0; i < allExprs; i++) {
-        let new_expr = toDelete[i]
-        new_expr.hidden = true;
-        calc.setExpression(new_expr); // this is somehow faster?
-        //calc.removeExpression(new_expr);
-    }
-    toDelete = [];
+function deleteAllMentions(calc: any, id: string) {
+    calc.removeExpression({id: id});
+    console.log(calc.getState());
 }
-function genAllowedFunctions(savedExpressions: ExprObject[], calc: Desmos.Calculator) {
+function genAllowedFunctions(calc: any) {
     const allowed_functions = {
-        __point: (x: string, y: string, color: string, id: string, secret = false, hidden = false): Object => {
-            return { latex: String.raw`\left( ${x}, ${y} \right)`, color: color, id: id, secret: secret, hidden: hidden };
-        },
-        __expression: (expr: string, color: string, id: string, secret = false, hidden = false): Object => {
-            return { latex: expr, color: color, id: id, secret: secret, hidden: hidden };
-        },
-        __gatherExpressions: (exprs: ExprObject[]) => {
-            let allExprs = exprs.length;
-            for (let i = 0; i < allExprs; i++) {
-                savedExpressions.push(exprs[i]);
-                calc.setExpression(exprs[i]);
+        __makeExpr: (obj: Object, id: string): any => {
+            let finalObj = {latex: "", color: "", secret: false, hidden: false, id: id}
+            if ("x" in obj || "y" in obj) {
+                const x = "x" in obj ? obj["x"] as string : "0";
+                const y = "y" in obj ? obj["y"] as string : "0";
+                finalObj["latex"] = String.raw`\left( ${x}, ${y} \right)`;
+            } else  {
+                finalObj["latex"] = "expr" in obj ? obj["expr"] as string : "";
             }
-
+            finalObj["color"] = "color" in obj ? obj["color"] as string : "#DEAD00";
+            finalObj["secret"] = "secret" in obj ? obj["secret"] as boolean : false;
+            finalObj["hidden"] = "hidden" in obj ? obj["hidden"] as boolean : false;
+            return finalObj
+        },
+        __gatherExpressions: (exprs: any[], id: string) => {
+            addFolderWithMembers(id, id, calc, exprs);
         }
     }
     return allowed_functions;
@@ -61,7 +58,7 @@ for (i= start; i <= end; i++) {
 }`
     );
     const editorCodeValueRef = useRef<string>(startingCode);
-    const ids: Array<ExprObject> = [];
+    const ids: Array<string> = [];
     useEffect(() => {
         const local = localStorage.getItem("tabs");
         if (local) {
@@ -74,13 +71,13 @@ for (i= start; i <= end; i++) {
 
         }
     }, []);
-    const callback = () => {
-        deleteAllMentions(calculator, ids);
+    const runCode = () => {
+        deleteAllMentions(calculator, tab_id);
         const err = RunSandboxCode(
             {
                 code: editorCodeValueRef.current,
                 timeout: 1000,
-                global_functions: genAllowedFunctions(ids, calculator),
+                global_functions: genAllowedFunctions(calculator),
                 run_from_id: id,
             }
         );
@@ -104,8 +101,8 @@ for (i= start; i <= end; i++) {
     }, []);
     return (
         <div>
-            <button className="change-button" onClick={callback}> run </button>
-            <button className="change-button" onClick={() => { deleteAllMentions(calculator, ids) }}> clear </button>
+            <button className="change-button" onClick={runCode}> run </button>
+            <button className="change-button" onClick={() => { deleteAllMentions(calculator, tab_id) }}> clear </button>
             <button className="change-button" onClick={clearConsole}>clear output</button>
             <div ref={editorRef}>
                 <CodeMirror

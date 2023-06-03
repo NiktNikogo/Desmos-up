@@ -8,7 +8,7 @@ import CodeTab from "../components/CodeTab"
  */
 
 interface TabsManagerProps {
-    calculator: Desmos.Calculator,
+    calculator: any,
     lightMode: boolean,
     codeHeight: string
 }

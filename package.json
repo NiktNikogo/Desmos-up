@@ -24,6 +24,7 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.32.2",
     "next": "13.1.6",
+    "package.json": "^2.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-slick": "^0.29.0",
@@ -31,7 +32,6 @@
     "vm-browserify": "^1.1.2"
   },
   "devDependencies": {
-    "@types/desmos": "^1.6.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11"
   }

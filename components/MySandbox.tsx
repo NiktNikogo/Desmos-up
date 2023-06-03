@@ -26,18 +26,14 @@ function RunSandboxCode({ code, timeout, global_functions, run_from_id}: sandbox
 ` +    
     code +
 `}
-__expressions = [];
+let __expressions = [];
+let __i = 0
 for (const __val of __main()) {
-    if(__val.length === 3) { 
-        const __expr = __point(__val[0].toString(), __val[1].toString(), __val[2].toString(), "${run_from_id}" + "_" + __val[0].toString() + "_" + __val[1].toString(), secret=true, hidden=false)
-        __expressions.push(__expr);
-    }
-    else if(__val.length === 2) {
-        const __expr = __expression(__val[0].toString(), __val[1].toString(), "${run_from_id}" + "_" + __val[0].toString(), secret=false, hidden=false)
-        __expressions.push(__expr);
-    }
+    const __expr = __makeExpr(__val, "${run_from_id}" + __i.toString())
+    __expressions.push(__expr);
+    __i += 1;
 }
-__gatherExpressions(__expressions);
+__gatherExpressions(__expressions, "${run_from_id}");
         `;
     //console.log("code -> vm: ", code_to_run);
     writeInformation(`Attempting to run code from @${run_from_id}`);

@@ -1,11 +1,16 @@
-/// <reference types="@types/desmos" />
-
-function deleteAllWithMention(calc: Desmos.Calculator, mention: string) {
-
+function addFolderWithMembers(folderId: string, folderTitle: string, calc: any, members: Array<any>) {
+    let state = calc.getState();
+    console.log(state);
+    let expressions = state["expressions"];
+    expressions["list"].push({ type: "folder", id: folderId, hidden: false, 
+        secret: true, title: folderTitle});
+    members.map( (expr) => {
+        expressions["list"].push({...expr, type:"expression", folderId: folderId});
+    });
+    state["expressions"] = expressions;
+    calc.setState(state);
 }
-function deleteFromCalc(calc: Desmos.Calculator, toDelete: [string]) {
 
-}
 interface ExprObject {
     latex: string,
     color: string,
@@ -14,5 +19,5 @@ interface ExprObject {
     hidden: boolean,
 }
 
-export { deleteAllWithMention, deleteFromCalc };
+export { addFolderWithMembers };
 export type { ExprObject };
