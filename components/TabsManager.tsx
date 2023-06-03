@@ -9,9 +9,10 @@ import CodeTab from "../components/CodeTab"
 
 interface TabsManagerProps {
     calculator: Desmos.Calculator,
-    lightMode: boolean;
+    lightMode: boolean,
+    codeHeight: string
 }
-function TabsManager({ calculator, lightMode }: TabsManagerProps) {
+function TabsManager({ calculator, lightMode, codeHeight }: TabsManagerProps) {
     const [activeTab, setActiveTab] = useState<string>("tab_1");
     const [usedTabs, setUsedTabs] = useState<Set<string>>(new Set(["tab_1"]));
     const counterRef = useRef<number>(1);
@@ -54,7 +55,6 @@ function TabsManager({ calculator, lightMode }: TabsManagerProps) {
         else {
             id = new_idx;
         }
-        console.log(typeof(new_idx))
         const tempTabs = usedTabs;
         tempTabs.add(id);
         setUsedTabs(tempTabs);
@@ -139,7 +139,8 @@ function TabsManager({ calculator, lightMode }: TabsManagerProps) {
                         Array.from(usedTabs).map((tab_id) => {
                             return (
                                 <div key={tab_id} className={tab_id === activeTab ? "tab_content_active" : "tab_content"} id={tab_id}>
-                                    <CodeTab lightMode={lightMode} calculator={calculator} tab_id={tab_id} />
+                                
+                                    <CodeTab lightMode={lightMode} calculator={calculator} tab_id={tab_id} height={codeHeight} />
                                 </div>);
                         })
                     }

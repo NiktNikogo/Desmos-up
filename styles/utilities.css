@@ -47,7 +47,7 @@
 .tab_container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     overflow: hidden;  
 }
 
@@ -84,4 +84,10 @@
 .light-mode .change-button {
     background: lightgray;
     border: 2px solid lightslategray;
+}
+
+.collumn_container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }

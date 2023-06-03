@@ -4,13 +4,14 @@ import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { bbedit } from "@uiw/codemirror-theme-bbedit"
 import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
-import styles from './CodeTab.module.css';
 import { ExprObject } from '../lib/desmosUtils'
+import { clearConsole, writeFailure } from "@/lib/consoleUtils";
 
 interface CodeTabProps {
     calculator: Desmos.Calculator,
     tab_id: string,
     lightMode: boolean,
+    height: string
 }
 function deleteAllMentions(calc: Desmos.Calculator, toDelete: ExprObject[]) {
     let allExprs = toDelete.length;
@@ -41,7 +42,7 @@ function genAllowedFunctions(savedExpressions: ExprObject[], calc: Desmos.Calcul
     }
     return allowed_functions;
 }
-function CodeTab({ calculator, tab_id, lightMode }: CodeTabProps) {
+function CodeTab({ calculator, tab_id, lightMode, height }: CodeTabProps) {
 
     const editorRef = useRef<HTMLDivElement>(null);
     const [id, setId] = useState<string>(tab_id);
@@ -75,7 +76,7 @@ for (i= start; i <= end; i++) {
     }, []);
     const callback = () => {
         deleteAllMentions(calculator, ids);
-        const res = RunSandboxCode(
+        const err = RunSandboxCode(
             {
                 code: editorCodeValueRef.current,
                 timeout: 1000,
@@ -83,6 +84,14 @@ for (i= start; i <= end; i++) {
                 run_from_id: id,
             }
         );
+        if (err) {
+            writeFailure(`@${tab_id}: ${err}`)
+            console.log(`error @${tab_id}:\n ${err}`)
+            const btnLabel = document.getElementById("show-console");
+            if(btnLabel) {
+                btnLabel.textContent = "🐞";
+            }
+        }
         const tabs = localStorage.getItem("tabs");
         if (tabs) {
             let tabsObj = JSON.parse(tabs);
@@ -97,11 +106,12 @@ for (i= start; i <= end; i++) {
         <div>
             <button className="change-button" onClick={callback}> run </button>
             <button className="change-button" onClick={() => { deleteAllMentions(calculator, ids) }}> clear </button>
+            <button className="change-button" onClick={clearConsole}>clear output</button>
             <div ref={editorRef}>
                 <CodeMirror
                     value={startingCode}
-                    height="80vh"
-                    width="40vw"
+                    height={height}
+                    width="39vw"
                     theme={lightMode ? bbedit : okaidia}
                     extensions={[langs.javascript()]}
                     onChange={onChange}

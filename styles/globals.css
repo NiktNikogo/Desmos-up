@@ -152,3 +152,17 @@ a {
   background: #ededed;
   color: black;
 }
+
+#console {
+  width: 39vw; 
+  height: 40vh;
+  font-size: 1rem;
+  background-color: #262626;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0px;
+  outline: 0px solid transparent;
+  padding-left: 5px;
+  overflow-y: auto;
+  font-family: "Courier New", Courier, monospace;
+}
