@@ -51,10 +51,10 @@ let x = 1;
 let y = 1;
 let start = -2;
 let end = 2;
-for (i= start; i <= end; i++) {
+for (i = start; i <= end; i++) {
     x = i
     y = next_y(x);
-    yield [x, y, "#DEAD00"];
+    yield {x:x, y:y, c:"#DEAD00"};
 }`
     );
     const editorCodeValueRef = useRef<string>(startingCode);

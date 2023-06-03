@@ -1,12 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import CodeTab from "../components/CodeTab"
-/**
- * TODO:
- * naprawić gówno, że jak zmieniam nazwę i usuwam, to nie czyści starego wykresu
- * coś zrobić z tym scrollem
- * dodać nowe typy
- */
-
 interface TabsManagerProps {
     calculator: any,
     lightMode: boolean,
