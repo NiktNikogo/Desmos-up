@@ -29,20 +29,19 @@ function RunSandboxCode({ code, timeout, global_functions, run_from_id}: sandbox
 let __expressions = [];
 let __i = 0
 for (const __val of __main()) {
-    const __expr = __makeExpr(__val, "${run_from_id}" + __i.toString())
+    const __expr = __makeExpr(__val, "${run_from_id}" + "$" + __i.toString())
     __expressions.push(__expr);
     __i += 1;
 }
 __gatherExpressions(__expressions, "${run_from_id}");
         `;
-    //console.log("code -> vm: ", code_to_run);
     writeInformation(`Attempting to run code from @${run_from_id}`);
     try {
         vm.runInNewContext(code_to_run, sandbox_allowed, options);
     } catch (error){
         return error
     }
-    writeSucces(`Code from @${run_from_id} run successfully`)
+    writeSucces(`Code from @${run_from_id} ran successfully`)
 }
 
 export default RunSandboxCode;

@@ -4,7 +4,7 @@ import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { bbedit } from "@uiw/codemirror-theme-bbedit"
 import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
-import { addFolderWithMembers } from '../lib/desmosUtils'
+import { addFolderWithMembers, createSlider, ExprObject, getSequenceFromId } from '../lib/desmosUtils'
 import { clearConsole, writeFailure } from "@/lib/consoleUtils";
 
 interface CodeTabProps {
@@ -14,27 +14,31 @@ interface CodeTabProps {
     height: string
 }
 function deleteAllMentions(calc: any, id: string) {
-    calc.removeExpression({id: id});
+    calc.removeExpression({ id: id });
     console.log(calc.getState());
 }
-function genAllowedFunctions(calc: any) {
+function genAllowedFunctions(calc: any, tab_id: string) {
     const allowed_functions = {
-        __makeExpr: (obj: Object, id: string): any => {
-            let finalObj = {latex: "", color: "", secret: false, hidden: false, id: id}
-            if ("x" in obj || "y" in obj) {
-                const x = "x" in obj ? obj["x"] as string : "0";
-                const y = "y" in obj ? obj["y"] as string : "0";
-                finalObj["latex"] = String.raw`\left( ${x}, ${y} \right)`;
-            } else  {
-                finalObj["latex"] = "expr" in obj ? obj["expr"] as string : "";
-            }
-            finalObj["color"] = "color" in obj ? obj["color"] as string : "#DEAD00";
-            finalObj["secret"] = "secret" in obj ? obj["secret"] as boolean : false;
-            finalObj["hidden"] = "hidden" in obj ? obj["hidden"] as boolean : false;
-            return finalObj
+        __makeExpr: (obj: Object, id: string): ExprObject => {
+            return ExprObject.makeProper(obj, id);
         },
-        __gatherExpressions: (exprs: any[], id: string) => {
+        __gatherExpressions: (exprs: ExprObject[], id: string) => {
             addFolderWithMembers(id, id, calc, exprs);
+        },
+        makeSlider: (name: string, initValue: number, min: number, max: number, step: number) => {
+            console.log(tab_id, initValue, min, max, step, name);
+    
+            createSlider(calc, tab_id, {
+                min: min,
+                max: max,
+                step: step,
+                initValue: initValue,
+                varName: name,
+            });
+        
+        },
+        getSequence: (tab_id: string) => {
+            getSequenceFromId(calc, tab_id);
         }
     }
     return allowed_functions;
@@ -54,11 +58,10 @@ let end = 2;
 for (i = start; i <= end; i++) {
     x = i
     y = next_y(x);
-    yield {x:x, y:y, c:"#DEAD00"};
+    yield {x:x, y:y, color:"#DEAD00"};
 }`
     );
     const editorCodeValueRef = useRef<string>(startingCode);
-    const ids: Array<string> = [];
     useEffect(() => {
         const local = localStorage.getItem("tabs");
         if (local) {
@@ -77,7 +80,7 @@ for (i = start; i <= end; i++) {
             {
                 code: editorCodeValueRef.current,
                 timeout: 1000,
-                global_functions: genAllowedFunctions(calculator),
+                global_functions: genAllowedFunctions(calculator, tab_id),
                 run_from_id: id,
             }
         );
@@ -85,7 +88,7 @@ for (i = start; i <= end; i++) {
             writeFailure(`@${tab_id}: ${err}`)
             console.log(`error @${tab_id}:\n ${err}`)
             const btnLabel = document.getElementById("show-console");
-            if(btnLabel) {
+            if (btnLabel) {
                 btnLabel.textContent = "🐞";
             }
         }
@@ -95,6 +98,7 @@ for (i = start; i <= end; i++) {
             tabsObj[tab_id] = editorCodeValueRef.current;
             localStorage.setItem("tabs", JSON.stringify(tabsObj));
         }
+        console.log(calculator.getState())
     }
     const onChange = useCallback((value: any, viewUpdate: any) => {
         editorCodeValueRef.current = value;
