@@ -4,7 +4,7 @@ import { okaidia } from "@uiw/codemirror-theme-okaidia";
 import { bbedit } from "@uiw/codemirror-theme-bbedit"
 import { langs } from "@uiw/codemirror-extensions-langs";
 import RunSandboxCode from "../components/MySandbox";
-import { addFolderWithMembers, createSlider, ExprObject, getSequenceFromId } from '../lib/desmosUtils'
+import { addFolderWithMembers, addToTable, createSlider, createTable, ExprObject, getSequenceFromId, Point, Sequence } from '../lib/desmosUtils'
 import { clearConsole, writeFailure } from "@/lib/consoleUtils";
 
 interface CodeTabProps {
@@ -17,6 +17,7 @@ function deleteAllMentions(calc: any, id: string) {
     calc.removeExpression({ id: id });
     console.log(calc.getState());
 }
+
 function genAllowedFunctions(calc: any, tab_id: string) {
     const allowed_functions = {
         __makeExpr: (obj: Object, id: string): ExprObject => {
@@ -27,7 +28,7 @@ function genAllowedFunctions(calc: any, tab_id: string) {
         },
         makeSlider: (name: string, initValue: number, min: number, max: number, step: number) => {
             console.log(tab_id, initValue, min, max, step, name);
-    
+
             createSlider(calc, tab_id, {
                 min: min,
                 max: max,
@@ -35,10 +36,25 @@ function genAllowedFunctions(calc: any, tab_id: string) {
                 initValue: initValue,
                 varName: name,
             });
-        
+
         },
-        getSequence: (tab_id: string) => {
-            getSequenceFromId(calc, tab_id);
+        getSequence: (tab_id: string): Array<Point> => {
+            return getSequenceFromId(calc, tab_id);
+        },
+        makeTable: (name: string, columns: Array<object> = []) => {
+            createTable(calc, name);
+            if (columns.length > 0) {
+                columns.forEach((column) => {
+                    const seq = Sequence.createFromObj(column);
+                    addToTable(calc, name, seq.name, seq.values);
+                });
+            }
+        },
+        addToTable(name: string, columns: Array<object>) {
+            columns.forEach((column) => {
+                const seq = Sequence.createFromObj(column);
+                addToTable(calc, name, seq.name, seq.values);
+            });
         }
     }
     return allowed_functions;

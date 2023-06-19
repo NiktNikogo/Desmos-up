@@ -45,7 +45,7 @@ function Home() {
         <div id="script-div" style={{ position: "relative" }} >
           <div className="tab_container">
             <TabsManager calculator={calculator!} lightMode={lightMode}
-              codeHeight={consoleOpen ? "40vh" : "81vh"} />
+              codeHeight={consoleOpen ? "40vh" : "78vh"} />
             <Console show={consoleOpen} />
           </div>
 

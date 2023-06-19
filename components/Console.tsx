@@ -4,7 +4,7 @@ interface ConsoleProps {
 
 function Console({ show }: ConsoleProps) {
 
-    return <div id="console" style={{ display: show ? "block" : "none"}} />
+    return <div id="console" style={{ display: show ? "block" : "none", height: "38vh"}} />
     
 }
 
